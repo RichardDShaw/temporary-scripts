@@ -1,0 +1,45 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class movementAI : MonoBehaviour {
+
+	//敌人速度
+	private const int speed = 2;
+	//定义敌人静止状态
+	private const int STATE_STAY = 0;
+	//定义敌人攻击状态
+	private const int STATE_ATTACK = 1;
+	//最小进攻距离
+	private const int ATTACK_DISTANCE = 20;
+	//敌人的状态
+	private int enemyState;
+
+	private GameObject obj;
+
+
+	// Use this for initialization
+	void Start () {
+		//获取玩家对象，并初始化敌人状态
+		obj = GameObject.Find ("player");
+		enemyState = STATE_STAY;
+	}
+	
+	// Update is called once per frame
+	void Update () {
+		if (Vector3.Distance (obj.transform.position, transform.position) <= ATTACK_DISTANCE) {
+			//如果玩家在敌人进攻距离之内，改变状态为进攻
+			enemyState = STATE_ATTACK;
+		} else {
+			enemyState = STATE_STAY;
+		}
+
+		if (enemyState == STATE_ATTACK) {
+			//进攻模式
+			transform.LookAt (obj.transform);
+			if (Vector3.Distance (obj.transform.position, transform.position) >= 1) {
+				transform.Translate (Vector3.forward * Time.deltaTime * speed);
+			}
+		}
+	}
+}
